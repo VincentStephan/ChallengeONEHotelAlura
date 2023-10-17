@@ -6,8 +6,20 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.Color;
+
+import com.alura.hotel.Dao.huespedDAO;
+import com.alura.hotel.Dao.reservaDAO;
+import com.alura.hotel.modelo.Huesped;
+import com.alura.hotel.modelo.Reserva;
+import com.alura.hotel.utils.JPAUtils;
 import com.toedter.calendar.JDateChooser;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.swing.JComboBox;
+import javax.persistence.EntityManager;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,6 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.text.Format;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
@@ -27,6 +40,10 @@ import javax.swing.JSeparator;
 
 @SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
+
+	private EntityManager em = JPAUtils.getEntetyManager();
+
+	private huespedDAO huespedDao = new huespedDAO(this.em);
 
 	private JPanel contentPane;
 	private JTextField txtNombre;
@@ -39,9 +56,12 @@ public class RegistroHuesped extends JFrame {
 	private JLabel labelAtras;
 	int xMouse, yMouse;
 
+	private Reserva reservaDatos;
+
 	/**
 	 * Launch the application.
 	 */
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -57,7 +77,10 @@ public class RegistroHuesped extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * 
+	 * @param reservaDatos
 	 */
+
 	public RegistroHuesped() {
 
 		setIconImage(Toolkit.getDefaultToolkit()
@@ -71,60 +94,6 @@ public class RegistroHuesped extends JFrame {
 		setLocationRelativeTo(null);
 		setUndecorated(true);
 		contentPane.setLayout(null);
-
-		JPanel header = new JPanel();
-		header.setBounds(0, 0, 910, 36);
-		header.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				headerMouseDragged(e);
-
-			}
-		});
-		header.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				headerMousePressed(e);
-			}
-		});
-		header.setLayout(null);
-		header.setBackground(SystemColor.text);
-		header.setOpaque(false);
-		header.setBounds(0, 0, 910, 36);
-		contentPane.add(header);
-
-		JPanel btnAtras = new JPanel();
-		btnAtras.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ReservasView reservas = new ReservasView();
-				reservas.setVisible(true);
-				dispose();
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnAtras.setBackground(Color.white);
-				labelAtras.setForeground(Color.black);
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				btnAtras.setBackground(new Color(12, 138, 199));
-				labelAtras.setForeground(Color.white);
-			}
-		});
-		btnAtras.setLayout(null);
-		btnAtras.setBackground(new Color(12, 138, 199));
-		btnAtras.setBounds(0, 0, 53, 36);
-		header.add(btnAtras);
-
-		labelAtras = new JLabel("<");
-		labelAtras.setHorizontalAlignment(SwingConstants.CENTER);
-		labelAtras.setForeground(Color.WHITE);
-		labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
-		labelAtras.setBounds(0, 0, 53, 36);
-		btnAtras.add(labelAtras);
 
 		txtNombre = new JTextField();
 		txtNombre.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -223,6 +192,7 @@ public class RegistroHuesped extends JFrame {
 		contentPane.add(lblNumeroReserva);
 
 		txtNreserva = new JTextField();
+		txtNreserva.setEditable(false);
 		txtNreserva.setFont(new Font("Roboto", Font.PLAIN, 16));
 		txtNreserva.setBounds(560, 495, 285, 33);
 		txtNreserva.setColumns(10);
@@ -269,9 +239,35 @@ public class RegistroHuesped extends JFrame {
 		JPanel btnguardar = new JPanel();
 		btnguardar.setBounds(723, 560, 122, 35);
 		btnguardar.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
+				try {
+					String Nombre = txtNombre.getText();
+					String Apellido = txtApellido.getText();
+					Date UtilDate= txtFechaN.getDate();
+					java.sql.Date FechaDeNacimiento = new java.sql.Date(UtilDate.getTime());
+					String Nacionalidad = txtNacionalidad.getSelectedItem().toString();
+					Long Telefono = Long.parseLong(txtTelefono.getText());
+					Huesped huesped = new Huesped(Nombre, Apellido, FechaDeNacimiento, Nacionalidad, Telefono);
+
+					huesped.setReservas(reservaDatos);
+					huespedDao.guardar(huesped);
+					huespedDao.cerrar();
+					JOptionPane.showMessageDialog(null, "Se guardo correctamente la información");
+					MenuUsuario usuario = new MenuUsuario();
+					usuario.setVisible(true);
+					dispose();
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error en guardar la información");
+					huespedDao.cerrar();
+				}
+
 			}
+
 		});
 		btnguardar.setLayout(null);
 		btnguardar.setBackground(new Color(12, 138, 199));
@@ -301,6 +297,68 @@ public class RegistroHuesped extends JFrame {
 		panel.add(logo);
 		logo.setIcon(new ImageIcon(RegistroHuesped.class.getResource("/com/alura/hotel/imagenes/Ha-100px.png")));
 
+		JPanel header = new JPanel();
+		header.setBounds(0, 0, 857, 36);
+		panel.add(header);
+		header.setForeground(Color.WHITE);
+		header.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				headerMouseDragged(e);
+
+			}
+		});
+		header.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				headerMousePressed(e);
+			}
+		});
+		header.setLayout(null);
+		header.setBackground(Color.WHITE);
+
+		header.setOpaque(false);
+				
+						labelAtras = new JLabel("<");
+						labelAtras.setBounds(0, 0, 53, 36);
+						header.add(labelAtras);
+						labelAtras.setBackground(new Color(12, 138, 199));
+						labelAtras.setHorizontalAlignment(SwingConstants.CENTER);
+						labelAtras.setForeground(Color.WHITE);
+						labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
+						
+								JPanel btnAtras = new JPanel();
+								btnAtras.setOpaque(false);
+								btnAtras.setBounds(0, 0, 53, 36);
+								header.add(btnAtras);
+								btnAtras.setDoubleBuffered(false);
+								btnAtras.setForeground(new Color(12, 138, 199));
+								
+										btnAtras.setBackground(new Color(12, 138, 199));
+										
+												btnAtras.addMouseListener(new MouseAdapter() {
+													@Override
+													public void mouseClicked(MouseEvent e) {
+														ReservasView reservas = new ReservasView();
+														reservas.setVisible(true);
+														dispose();
+													}
+										
+													@Override
+													public void mouseEntered(MouseEvent e) {
+														btnAtras.setBackground(Color.white);
+														labelAtras.setForeground(Color.black);
+													}
+										
+													@Override
+													public void mouseExited(MouseEvent e) {
+														btnAtras.setBackground(new Color(12, 138, 199));
+														labelAtras.setForeground(Color.white);
+													}
+												});
+												btnAtras.setLayout(null);
+												btnAtras.setBackground(Color.white);
+
 		JPanel btnexit = new JPanel();
 		btnexit.setBounds(857, 0, 53, 36);
 		contentPane.add(btnexit);
@@ -325,7 +383,7 @@ public class RegistroHuesped extends JFrame {
 			}
 		});
 		btnexit.setLayout(null);
-		btnexit.setBackground(Color.white);
+		btnexit.setBackground(new Color(255, 255, 255));
 
 		labelExit = new JLabel("X");
 		labelExit.setBounds(0, 0, 53, 36);
@@ -333,6 +391,7 @@ public class RegistroHuesped extends JFrame {
 		labelExit.setHorizontalAlignment(SwingConstants.CENTER);
 		labelExit.setForeground(SystemColor.black);
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
+
 	}
 
 	// Código que permite mover la ventana por la pantalla según la posición de "x"
@@ -348,4 +407,14 @@ public class RegistroHuesped extends JFrame {
 		this.setLocation(x - xMouse, y - yMouse);
 	}
 
+	public void setReserva(Reserva reservadatos) {
+		this.reservaDatos = reservadatos;
+	}
+
+	public void setNreserva() {
+		if (reservaDatos != null) {
+			txtNreserva.setText(reservaDatos.getId().toString());
+
+		}
+	}
 }

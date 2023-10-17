@@ -25,15 +25,30 @@ public class Huesped {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
 	
+	public Huesped(String nombre, String apellido, java.sql.Date fechaDeNacimiento, String nacionalidad, Long telefono
+			 ) {
+		
+		Nombre = nombre;
+		Apellido = apellido;
+		FechaDeNacimiento = fechaDeNacimiento;
+		Nacionalidad = nacionalidad;
+		Telefono = telefono;
+		
+	}
+
 	private String Nombre;
 	private String Apellido;
-	private Date FechaDeNacimiento;
+	private java.sql.Date FechaDeNacimiento;
 	private String Nacionalidad;
-	private int Telefono;
+	private Long Telefono;
+
 	
 	@ManyToOne
 	@JoinColumn(name = "reserva_id")
 	private Reserva reservas;
 	
- 
+	   @Override
+	    public String toString() {
+	        return String.valueOf(reservas);
+	    }
 }

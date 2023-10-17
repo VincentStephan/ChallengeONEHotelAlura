@@ -6,9 +6,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.alura.hotel.Dao.huespedDAO;
+import com.alura.hotel.Dao.reservaDAO;
+import com.alura.hotel.modelo.Huesped;
+import com.alura.hotel.modelo.Reserva;
+import com.alura.hotel.utils.JPAUtils;
+
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.persistence.EntityManager;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.SystemColor;
@@ -29,6 +37,10 @@ import java.awt.event.MouseMotionAdapter;
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
 
+	private EntityManager em = JPAUtils.getEntetyManager();
+	
+	private huespedDAO huespedDao = new huespedDAO(this.em);
+	private reservaDAO reservaDao = new reservaDAO(this.em);
 	private JPanel contentPane;
 	private JTextField txtBuscar;
 	private JTable tbHuespedes;
@@ -38,6 +50,10 @@ public class Busqueda extends JFrame {
 	private JLabel labelAtras;
 	private JLabel labelExit;
 	int xMouse, yMouse;
+	List<Reserva> reservas = ListarReserva();
+	List<Huesped> huespedes = ListarHuesped();
+
+ 
 
 	/**
 	 * Launch the application.
@@ -53,6 +69,31 @@ public class Busqueda extends JFrame {
 				}
 			}
 		});
+	}
+
+	private List<Reserva> ListarReserva() {
+		return reservaDao.consultarTodo();
+	}
+	
+	
+	private List<Huesped> ListarHuesped() {
+		return huespedDao.consultarTodo();
+	}
+	
+	private void cargarTabla() {
+		
+		 modelo.setRowCount(0);
+		
+		 for (Reserva reserva : reservas) {
+	            Object[] fila = {reserva.getId(), reserva.getFechaEntrada(), reserva.getFechaSalida(), reserva.getValor(), reserva.getFormaPago()};
+	            modelo.addRow(fila);
+	        }
+		 
+		 for (Huesped huesped : huespedes) {
+	            Object[] fila = {huesped.getId(), huesped.getNombre(), huesped.getApellido(), huesped.getFechaDeNacimiento(), 
+	            		huesped.getNacionalidad(), huesped.getTelefono(), huesped.getReservas().getId()};
+	            modeloHuesped.addRow(fila);
+	        }
 	}
 
 	/**
@@ -98,7 +139,14 @@ public class Busqueda extends JFrame {
 		modelo.addColumn("Fecha Check Out");
 		modelo.addColumn("Valor");
 		modelo.addColumn("Forma de Pago");
+		
 		JScrollPane scroll_table = new JScrollPane(tbReservas);
+		scroll_table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				cargarTabla();
+			}
+		});
 		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/com/alura/hotel/imagenes/reservado.png")),
 				scroll_table, null);
 		scroll_table.setVisible(true);
@@ -263,7 +311,11 @@ public class Busqueda extends JFrame {
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
+		
+		cargarTabla();
 	}
+	
+	
 
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	private void headerMousePressed(java.awt.event.MouseEvent evt) {
