@@ -80,4 +80,11 @@ public class huespedDAO {
 		    TypedQuery<Huesped> query = em.createQuery(jpql, Huesped.class);
 		    return query.getResultList();
 		}
+		
+		public List<Huesped> consultarPorApellido(String apellido) {
+		    String jpql = "SELECT h FROM huespedes h WHERE h.Apellido = :Apellido";
+		    TypedQuery<Huesped> query = em.createQuery(jpql, Huesped.class);
+		    query.setParameter("Apellido", apellido);
+		    return query.getResultList();
+		}
 }

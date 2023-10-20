@@ -3,6 +3,7 @@ package com.alura.hotel.views;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -21,6 +22,8 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -38,7 +41,7 @@ import java.awt.event.MouseMotionAdapter;
 public class Busqueda extends JFrame {
 
 	private EntityManager em = JPAUtils.getEntetyManager();
-	
+
 	private huespedDAO huespedDao = new huespedDAO(this.em);
 	private reservaDAO reservaDao = new reservaDAO(this.em);
 	private JPanel contentPane;
@@ -50,10 +53,7 @@ public class Busqueda extends JFrame {
 	private JLabel labelAtras;
 	private JLabel labelExit;
 	int xMouse, yMouse;
-	List<Reserva> reservas = ListarReserva();
-	List<Huesped> huespedes = ListarHuesped();
-
- 
+	private JTable tablaSeleccionada;
 
 	/**
 	 * Launch the application.
@@ -69,31 +69,6 @@ public class Busqueda extends JFrame {
 				}
 			}
 		});
-	}
-
-	private List<Reserva> ListarReserva() {
-		return reservaDao.consultarTodo();
-	}
-	
-	
-	private List<Huesped> ListarHuesped() {
-		return huespedDao.consultarTodo();
-	}
-	
-	private void cargarTabla() {
-		
-		 modelo.setRowCount(0);
-		
-		 for (Reserva reserva : reservas) {
-	            Object[] fila = {reserva.getId(), reserva.getFechaEntrada(), reserva.getFechaSalida(), reserva.getValor(), reserva.getFormaPago()};
-	            modelo.addRow(fila);
-	        }
-		 
-		 for (Huesped huesped : huespedes) {
-	            Object[] fila = {huesped.getId(), huesped.getNombre(), huesped.getApellido(), huesped.getFechaDeNacimiento(), 
-	            		huesped.getNacionalidad(), huesped.getTelefono(), huesped.getReservas().getId()};
-	            modeloHuesped.addRow(fila);
-	        }
 	}
 
 	/**
@@ -125,6 +100,23 @@ public class Busqueda extends JFrame {
 		contentPane.add(lblNewLabel_4);
 
 		JTabbedPane panel = new JTabbedPane(JTabbedPane.TOP);
+		panel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				if (panel.getSelectedIndex() == 0) {
+					tablaSeleccionada = tbReservas;
+					cargarTabla();
+				}
+
+				if (panel.getSelectedIndex() == 1) {
+					tablaSeleccionada = tbHuespedes;
+					cargarTabla();
+
+				}
+
+			}
+		});
 		panel.setBackground(new Color(12, 138, 199));
 		panel.setFont(new Font("Roboto", Font.PLAIN, 16));
 		panel.setBounds(20, 169, 865, 328);
@@ -139,12 +131,13 @@ public class Busqueda extends JFrame {
 		modelo.addColumn("Fecha Check Out");
 		modelo.addColumn("Valor");
 		modelo.addColumn("Forma de Pago");
-		
+
 		JScrollPane scroll_table = new JScrollPane(tbReservas);
-		scroll_table.addMouseListener(new MouseAdapter() {
+		JScrollBar horizontalScrollBar = scroll_table.getHorizontalScrollBar();
+		horizontalScrollBar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				cargarTabla();
+
 			}
 		});
 		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/com/alura/hotel/imagenes/reservado.png")),
@@ -163,9 +156,16 @@ public class Busqueda extends JFrame {
 		modeloHuesped.addColumn("Telefono");
 		modeloHuesped.addColumn("Número de Reserva");
 		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
+		scroll_tableHuespedes.setVisible(false);
+		scroll_tableHuespedes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+			}
+
+		});
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/com/alura/hotel/imagenes/pessoas.png")),
 				scroll_tableHuespedes, null);
-		scroll_tableHuespedes.setVisible(true);
 
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/com/alura/hotel/imagenes/Ha-100px.png")));
@@ -268,6 +268,15 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
+				if (tablaSeleccionada == tbReservas) {
+					BuscarNumeroReserva();
+
+				} else if (tablaSeleccionada == tbHuespedes) {
+					BuscarHuespedApellido();
+				} else {
+					BuscarNumeroReserva();
+				}
+
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -311,11 +320,80 @@ public class Busqueda extends JFrame {
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
-		
+
 		cargarTabla();
 	}
-	
-	
+
+	private void cargarTabla() {
+
+		modelo.setRowCount(0);
+		List<Reserva> reservaList = reservaDao.consultarTodo();
+
+		for (Reserva reserva : reservaList) {
+			Object[] fila = { reserva.getId(), reserva.getFechaEntrada(), reserva.getFechaSalida(), reserva.getValor(),
+					reserva.getFormaPago() };
+			modelo.addRow(fila);
+		}
+
+		modeloHuesped.setRowCount(0);
+		List<Huesped> huespedList = huespedDao.consultarTodo();
+
+		for (Huesped huesped : huespedList) {
+			Object[] fila = { huesped.getId(), huesped.getNombre(), huesped.getApellido(),
+					huesped.getFechaDeNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(),
+					huesped.getReservas().getId() };
+			modeloHuesped.addRow(fila);
+		}
+	}
+
+	private void BuscarNumeroReserva() {
+		try {
+			modelo.setRowCount(0);
+			Long NumeroReserva = null;
+
+			try {
+				NumeroReserva = Long.parseLong(txtBuscar.getText());
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Busqueda solo compatible con Numero de reserva");
+				cargarTabla();
+			}
+
+			List<Reserva> ListNreserva = reservaDao.consultarPorNumeroReserva(NumeroReserva);
+			em.clear();
+
+			for (Reserva reserva : ListNreserva) {
+				Object[] fila = { reserva.getId(), reserva.getFechaEntrada(), reserva.getFechaSalida(),
+						reserva.getValor(), reserva.getFormaPago() };
+				modelo.addRow(fila);
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Hubo un error inesperado, reinicie la aplicación");
+			em.close();
+		}
+
+	}
+
+	private void BuscarHuespedApellido() {
+		try {
+			modeloHuesped.setRowCount(0);
+			String apellido = txtBuscar.getText();
+			List<Huesped> ListApellidoH = huespedDao.consultarPorApellido(apellido);
+			em.clear();
+
+			for (Huesped huesped : ListApellidoH) {
+				Object[] fila = { huesped.getId(), huesped.getNombre(), huesped.getApellido(),
+						huesped.getFechaDeNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(),
+						huesped.getReservas().getId() };
+				modeloHuesped.addRow(fila);
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Hubo un error inesperado, reinicie la aplicación");
+			em.close();
+		}
+
+	}
 
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	private void headerMousePressed(java.awt.event.MouseEvent evt) {

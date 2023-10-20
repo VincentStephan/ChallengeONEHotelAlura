@@ -83,5 +83,13 @@ public class reservaDAO {
 	    String jpql = "SELECT r FROM reservas r";
 	    TypedQuery<Reserva> query = em.createQuery(jpql, Reserva.class);
 	    return query.getResultList();
+	    
+	}
+	
+	public List<Reserva> consultarPorNumeroReserva(Long id) {
+	    String jpql = "SELECT r FROM reservas r WHERE r.id = :numero";
+	    TypedQuery<Reserva> query = em.createQuery(jpql, Reserva.class);
+	    query.setParameter("numero", id);
+	    return query.getResultList();
 	}
 }
