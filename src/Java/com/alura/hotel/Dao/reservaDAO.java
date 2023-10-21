@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import com.alura.hotel.modelo.Reserva;
 
+
 public class reservaDAO {
 
 	private EntityManager em;
@@ -49,22 +50,6 @@ public class reservaDAO {
 		}
 	}
 
-	public void remover(Reserva reserva) {
-		EntityTransaction tx = em.getTransaction();
-		try {
-			tx.begin();
-			reserva = em.merge(reserva);
-			em.remove(reserva);
-			tx.commit();
-		} catch (Exception e) {
-			if (tx.isActive()) {
-				tx.rollback();
-			}
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Error en guardar la informacion");
-		}
-
-	}
 
 	public void cerrar() {
 		if (em != null && em.isOpen()) {
@@ -92,4 +77,39 @@ public class reservaDAO {
 	    query.setParameter("numero", id);
 	    return query.getResultList();
 	}
+	
+	
+    public void eliminarObjetoEnBaseDeDatos(Long id) {
+	    EntityTransaction tx = em.getTransaction();
+
+	    try {
+	        tx.begin();
+
+	        // Busca el objeto en la base de datos utilizando el ID.
+	        Reserva reserva = em.find(Reserva.class, id);
+
+	        if (reserva != null) {
+	            // Si se encuentra el objeto, procede a eliminarlo.
+	            em.remove(reserva);
+	        }
+
+	        tx.commit();
+	    } catch (Exception e) {
+	        if (tx.isActive()) {
+	            tx.rollback();
+	        }
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Error al eliminar la información");
+	    }
+	}
+    
+    public Reserva buscarPorId(Long id) {
+        try {
+            return em.find(Reserva.class, id);
+        } finally {
+            em.clear();
+        }
+    }
 }
+
+

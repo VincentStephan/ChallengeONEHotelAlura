@@ -8,15 +8,10 @@ import javax.swing.JTextField;
 import java.awt.Color;
 
 import com.alura.hotel.Dao.huespedDAO;
-import com.alura.hotel.Dao.reservaDAO;
 import com.alura.hotel.modelo.Huesped;
 import com.alura.hotel.modelo.Reserva;
 import com.alura.hotel.utils.JPAUtils;
 import com.toedter.calendar.JDateChooser;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.swing.JComboBox;
 import javax.persistence.EntityManager;
@@ -25,15 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.SystemColor;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.text.Format;
 import java.util.Date;
-import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;

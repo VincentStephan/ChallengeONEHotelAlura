@@ -1,8 +1,6 @@
 package com.alura.hotel.modelo;
 
 
-import java.sql.Date;
-
 import javax.persistence.Entity;
 
 import javax.persistence.GeneratedValue;
