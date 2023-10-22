@@ -51,7 +51,7 @@ public class Busqueda extends JFrame {
 	private JLabel labelAtras;
 	private JLabel labelExit;
 	int xMouse, yMouse;
-	
+
 	private JTable tablaSeleccionada;
 
 	/**
@@ -101,7 +101,7 @@ public class Busqueda extends JFrame {
 
 		JTabbedPane panel = new JTabbedPane(JTabbedPane.TOP);
 		panel.addMouseListener(new MouseAdapter() {
-			
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
@@ -312,7 +312,7 @@ public class Busqueda extends JFrame {
 				} catch (Exception e2) {
 					e2.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Hubo un error en actualizar los datos");
-					 busquedaController.cargarTabla(modelo, modeloHuesped);
+					busquedaController.cargarTabla(modelo, modeloHuesped);
 				}
 
 			}
@@ -334,35 +334,40 @@ public class Busqueda extends JFrame {
 		btnEliminar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-			    try {
-			        if (tablaSeleccionada == tbReservas) {
-			            int RegistroSeleccinado = tbReservas.getSelectedRow();
-			            if (RegistroSeleccinado >= 0) {
-			                Long Id = (Long) tbReservas.getValueAt(RegistroSeleccinado, 0);
-			                reservaDao.eliminarObjetoEnBaseDeDatos(Id);
-			                JOptionPane.showMessageDialog(null, "Se eliminó");
-			                busquedaController.cargarTabla(modelo, modeloHuesped);
-			            } else {
-			                JOptionPane.showMessageDialog(null, "Selecciona una fila para eliminar.");
-			                busquedaController.cargarTabla(modelo, modeloHuesped);
-			            }
-			        } else if (tablaSeleccionada == tbHuespedes) {
-			            int RegistroSeleccinado = tbHuespedes.getSelectedRow();
-			            if (RegistroSeleccinado >= 0) {
-			                Long Id = (Long) tbHuespedes.getValueAt(RegistroSeleccinado, 0);
-			                huespedDao.eliminarObjetoEnBaseDeDatos(Id);
-			                JOptionPane.showMessageDialog(null, "Se eliminó");
-			                busquedaController.cargarTabla(modelo, modeloHuesped);
-			            } else {
-			                JOptionPane.showMessageDialog(null, "Selecciona una fila para eliminar.");
-			                busquedaController.cargarTabla(modelo, modeloHuesped);
-			            }
-			        } 
-			    } catch (Exception e2) {
-			        e2.printStackTrace();
-			        JOptionPane.showMessageDialog(null, "Hubo un error al eliminar los datos.");
-			        busquedaController.cargarTabla(modelo, modeloHuesped);
-			    }
+				try {
+					if (tablaSeleccionada == tbReservas) {
+						int registroSeleccionado = tbReservas.getSelectedRow();
+						if (registroSeleccionado >= 0) {
+							Long id = (Long) tbReservas.getValueAt(registroSeleccionado, 0);
+							JOptionPane.showMessageDialog(null, "Se eliminó");
+							reservaDao.eliminarObjetoEnBaseDeDatos(id);
+						
+
+						
+							busquedaController.cargarTabla(modelo, modeloHuesped);
+						} else {
+							JOptionPane.showMessageDialog(null, "Selecciona una fila para eliminar.");
+							busquedaController.cargarTabla(modelo, modeloHuesped);
+						}
+					} else if (tablaSeleccionada == tbHuespedes) {
+						int registroSeleccionado = tbHuespedes.getSelectedRow();
+						if (registroSeleccionado >= 0) {
+							Long id = (Long) tbHuespedes.getValueAt(registroSeleccionado, 0);
+							JOptionPane.showMessageDialog(null, "Se eliminó");
+							huespedDao.eliminarObjetoEnBaseDeDatos(id);
+						
+
+							busquedaController.cargarTabla(modelo, modeloHuesped);
+						} else {
+							JOptionPane.showMessageDialog(null, "Selecciona una fila para eliminar.");
+							busquedaController.cargarTabla(modelo, modeloHuesped);
+						}
+					}
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Hubo un error al eliminar los datos.");
+					busquedaController.cargarTabla(modelo, modeloHuesped);
+				}
 			}
 		});
 		btnEliminar.setLayout(null);
@@ -373,20 +378,19 @@ public class Busqueda extends JFrame {
 
 		JLabel lblEliminar = new JLabel("ELIMINAR");
 		lblEliminar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEliminar.setForeground(Color.WHITE); 
+		lblEliminar.setForeground(Color.WHITE);
 		lblEliminar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
-		
-		 if (panel.getSelectedIndex() == 0) {
-	            tablaSeleccionada = tbReservas;
-	            busquedaController.cargarTabla(modelo, modeloHuesped);
-	        } else if (panel.getSelectedIndex() == 1) {
-	            tablaSeleccionada = tbHuespedes;
-	            busquedaController.cargarTabla(modelo, modeloHuesped);
-	        }
 
+		if (panel.getSelectedIndex() == 0) {
+			tablaSeleccionada = tbReservas;
+			busquedaController.cargarTabla(modelo, modeloHuesped);
+		} else if (panel.getSelectedIndex() == 1) {
+			tablaSeleccionada = tbHuespedes;
+			busquedaController.cargarTabla(modelo, modeloHuesped);
+		}
 
 	}
 

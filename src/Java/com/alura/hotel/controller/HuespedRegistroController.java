@@ -45,6 +45,8 @@ public class HuespedRegistroController  {
 			e2.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Error en guardar la información");
 			huespedDao.cerrar();
+			MenuUsuario frame = new MenuUsuario();
+			frame.setVisible(true);
 		}
 	}
 
