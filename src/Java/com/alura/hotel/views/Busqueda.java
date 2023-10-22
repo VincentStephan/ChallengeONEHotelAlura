@@ -10,8 +10,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.alura.hotel.Dao.huespedDAO;
 import com.alura.hotel.Dao.reservaDAO;
-import com.alura.hotel.modelo.Huesped;
-import com.alura.hotel.modelo.Reserva;
+import com.alura.hotel.controller.BusquedaController;
+
 import com.alura.hotel.utils.JPAUtils;
 
 import javax.swing.JTable;
@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.util.List;
+
 import javax.swing.JTabbedPane;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
@@ -40,6 +40,8 @@ public class Busqueda extends JFrame {
 
 	private huespedDAO huespedDao = new huespedDAO(this.em);
 	private reservaDAO reservaDao = new reservaDAO(this.em);
+	private BusquedaController busquedaController = new BusquedaController();
+
 	private JPanel contentPane;
 	private JTextField txtBuscar;
 	private JTable tbHuespedes;
@@ -49,6 +51,7 @@ public class Busqueda extends JFrame {
 	private JLabel labelAtras;
 	private JLabel labelExit;
 	int xMouse, yMouse;
+	
 	private JTable tablaSeleccionada;
 
 	/**
@@ -71,6 +74,7 @@ public class Busqueda extends JFrame {
 	 * Create the frame.
 	 */
 	public Busqueda() {
+		tablaSeleccionada = tbReservas;
 		setIconImage(Toolkit.getDefaultToolkit()
 				.getImage(Busqueda.class.getResource("/com/alura/hotel/imagenes/lupa2.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,17 +101,18 @@ public class Busqueda extends JFrame {
 
 		JTabbedPane panel = new JTabbedPane(JTabbedPane.TOP);
 		panel.addMouseListener(new MouseAdapter() {
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
 				if (panel.getSelectedIndex() == 0) {
 					tablaSeleccionada = tbReservas;
-					cargarTabla();
+					busquedaController.cargarTabla(modelo, modeloHuesped);
 				}
 
 				if (panel.getSelectedIndex() == 1) {
 					tablaSeleccionada = tbHuespedes;
-					cargarTabla();
+					busquedaController.cargarTabla(modelo, modeloHuesped);
 
 				}
 
@@ -265,12 +270,12 @@ public class Busqueda extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 
 				if (tablaSeleccionada == tbReservas) {
-					BuscarNumeroReserva();
+					busquedaController.BuscarNumeroReserva(modelo, modeloHuesped, txtBuscar);
 
 				} else if (tablaSeleccionada == tbHuespedes) {
-					BuscarHuespedApellido();
+					busquedaController.BuscarHuespedApellido(modeloHuesped, txtBuscar);
 				} else {
-					BuscarNumeroReserva();
+					busquedaController.BuscarNumeroReserva(modelo, modeloHuesped, txtBuscar);
 				}
 
 			}
@@ -292,25 +297,23 @@ public class Busqueda extends JFrame {
 		btnEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-             
+
 				try {
 					if (tablaSeleccionada == tbReservas) {
-						editarReservas();
-					
+						busquedaController.editarReservas(modelo, modeloHuesped, tbReservas);
 
 					} else if (tablaSeleccionada == tbHuespedes) {
-						editarHuespedes();
-						
-						
+						busquedaController.editarHuespedes(modelo, modeloHuesped, tbHuespedes);
+
 					} else {
 						tablaSeleccionada = tbReservas;
-						editarReservas();
+						busquedaController.editarReservas(modelo, modeloHuesped, tbReservas);
 					}
 				} catch (Exception e2) {
 					e2.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Hubo un error en actualizar los datos");
+					 busquedaController.cargarTabla(modelo, modeloHuesped);
 				}
-				
 
 			}
 		});
@@ -331,42 +334,35 @@ public class Busqueda extends JFrame {
 		btnEliminar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				try {
-					if (tablaSeleccionada == tbReservas) {
-						
-						int RegistroSeleccinado = tbReservas.getSelectedRow();
-						Long Id = (Long) tbReservas.getValueAt(RegistroSeleccinado, 0);
-						
-						reservaDao.eliminarObjetoEnBaseDeDatos(Id);
-						JOptionPane.showMessageDialog(null, "Se elimino");
-						cargarTabla();
-					
-
-					} else if (tablaSeleccionada == tbHuespedes) {
-						
-						int RegistroSeleccinado = tbHuespedes.getSelectedRow();
-						Long Id = (Long) tbHuespedes.getValueAt(RegistroSeleccinado, 0);
-						
-						huespedDao.eliminarObjetoEnBaseDeDatos(Id);
-						JOptionPane.showMessageDialog(null, "Se elimino");
-						cargarTabla();
-						
-						
-					} else {
-						tablaSeleccionada = tbReservas;
-						int RegistroSeleccinado = tbReservas.getSelectedRow();
-						Long Id = (Long) tbReservas.getValueAt(RegistroSeleccinado, 0);
-						reservaDao.eliminarObjetoEnBaseDeDatos(Id);
-						JOptionPane.showMessageDialog(null, "Se elimino");
-						cargarTabla();
-						
-					}
-				} catch (Exception e2) {
-					e2.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Hubo un error en eliminar los datos");
-				}
-				
-				
+			    try {
+			        if (tablaSeleccionada == tbReservas) {
+			            int RegistroSeleccinado = tbReservas.getSelectedRow();
+			            if (RegistroSeleccinado >= 0) {
+			                Long Id = (Long) tbReservas.getValueAt(RegistroSeleccinado, 0);
+			                reservaDao.eliminarObjetoEnBaseDeDatos(Id);
+			                JOptionPane.showMessageDialog(null, "Se eliminó");
+			                busquedaController.cargarTabla(modelo, modeloHuesped);
+			            } else {
+			                JOptionPane.showMessageDialog(null, "Selecciona una fila para eliminar.");
+			                busquedaController.cargarTabla(modelo, modeloHuesped);
+			            }
+			        } else if (tablaSeleccionada == tbHuespedes) {
+			            int RegistroSeleccinado = tbHuespedes.getSelectedRow();
+			            if (RegistroSeleccinado >= 0) {
+			                Long Id = (Long) tbHuespedes.getValueAt(RegistroSeleccinado, 0);
+			                huespedDao.eliminarObjetoEnBaseDeDatos(Id);
+			                JOptionPane.showMessageDialog(null, "Se eliminó");
+			                busquedaController.cargarTabla(modelo, modeloHuesped);
+			            } else {
+			                JOptionPane.showMessageDialog(null, "Selecciona una fila para eliminar.");
+			                busquedaController.cargarTabla(modelo, modeloHuesped);
+			            }
+			        } 
+			    } catch (Exception e2) {
+			        e2.printStackTrace();
+			        JOptionPane.showMessageDialog(null, "Hubo un error al eliminar los datos.");
+			        busquedaController.cargarTabla(modelo, modeloHuesped);
+			    }
 			}
 		});
 		btnEliminar.setLayout(null);
@@ -377,155 +373,22 @@ public class Busqueda extends JFrame {
 
 		JLabel lblEliminar = new JLabel("ELIMINAR");
 		lblEliminar.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEliminar.setForeground(Color.WHITE);
+		lblEliminar.setForeground(Color.WHITE); 
 		lblEliminar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblEliminar.setBounds(0, 0, 122, 35);
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
-
-		cargarTabla();
-	}
-
-	//meteodos para mover a un contrroller
-	
-	
-	
-	private void cargarTabla() {
-
-		modelo.setRowCount(0);
-		List<Reserva> reservaList = reservaDao.consultarTodo();
-
-		for (Reserva reserva : reservaList) {
-			Object[] fila = { reserva.getId(), reserva.getFechaEntrada(), reserva.getFechaSalida(), reserva.getValor(),
-					reserva.getFormaPago() };
-			modelo.addRow(fila);
-		}
-
-		modeloHuesped.setRowCount(0);
-		List<Huesped> huespedList = huespedDao.consultarTodo();
-
-		for (Huesped huesped : huespedList) {
-			Object[] fila = { huesped.getId(), huesped.getNombre(), huesped.getApellido(),
-					huesped.getFechaDeNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(),
-					huesped.getReservas().getId() };
-			modeloHuesped.addRow(fila);
-		}
-	}
-
-	private void BuscarNumeroReserva() {
-		try {
-			modelo.setRowCount(0);
-			Long NumeroReserva = null;
-
-			try {
-				NumeroReserva = Long.parseLong(txtBuscar.getText());
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Busqueda solo compatible con Numero de reserva");
-				cargarTabla();
-			}
-
-			List<Reserva> ListNreserva = reservaDao.consultarPorNumeroReserva(NumeroReserva);
-			em.clear();
-
-			for (Reserva reserva : ListNreserva) {
-				Object[] fila = { reserva.getId(), reserva.getFechaEntrada(), reserva.getFechaSalida(),
-						reserva.getValor(), reserva.getFormaPago() };
-				modelo.addRow(fila);
-			}
-
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Hubo un error inesperado, reinicie la aplicación");
-			em.close();
-		}
-
-	}
-
-	private void BuscarHuespedApellido() {
-		try {
-			modeloHuesped.setRowCount(0);
-			String apellido = txtBuscar.getText();
-			List<Huesped> ListApellidoH = huespedDao.consultarPorApellido(apellido);
-			em.clear();
-
-			for (Huesped huesped : ListApellidoH) {
-				Object[] fila = { huesped.getId(), huesped.getNombre(), huesped.getApellido(),
-						huesped.getFechaDeNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(),
-						huesped.getReservas().getId() };
-				modeloHuesped.addRow(fila);
-			}
-
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Hubo un error inesperado, reinicie la aplicación");
-			em.close();
-		}
-
-	}
-	
-	
-	private void editarReservas() {
 		
-		int RegistroSeleccinado = tbReservas.getSelectedRow();
-
-		if (RegistroSeleccinado >= 0) {
-
-			Long Id = (Long) tbReservas.getValueAt(RegistroSeleccinado, 0);
-			java.sql.Date FechaEntrada = (java.sql.Date) tbReservas.getValueAt(RegistroSeleccinado , 1);
-			java.sql.Date FechaSalida = (java.sql.Date) tbReservas.getValueAt(RegistroSeleccinado , 2);
-			String Valor = (String) tbReservas.getValueAt(RegistroSeleccinado, 3);
-			String FormaPago = (String) tbReservas.getValueAt(RegistroSeleccinado, 4);
-
-			Reserva ReservaSeleccionada = reservaDao.buscarPorId(Id);
-             System.out.println(ReservaSeleccionada);
-             if (ReservaSeleccionada != null) {
-                 ReservaSeleccionada.setFechaEntrada(FechaEntrada);
-                 ReservaSeleccionada.setFechaSalida(FechaSalida);
-                 ReservaSeleccionada.setValor(Valor);
-                 ReservaSeleccionada.setFormaPago(FormaPago);
-
-                 reservaDao.actualizar(ReservaSeleccionada);
-                 cargarTabla();
-             }
-         }  else {
-			JOptionPane.showMessageDialog(null, "Selecciona una casilla");
-			cargarTabla();
-		}
-		
-	}
-	
-	private void editarHuespedes() {
-	    int RegistroSeleccionado = tbHuespedes.getSelectedRow();
-
-	    if (RegistroSeleccionado >= 0) {
-	        Long Id = (Long) tbHuespedes.getValueAt(RegistroSeleccionado, 0);
-	        String nombre = (String) tbHuespedes.getValueAt(RegistroSeleccionado, 1);
-	        String apellido = (String) tbHuespedes.getValueAt(RegistroSeleccionado, 2);
-	        java.sql.Date FechaDeNacimiento = (java.sql.Date) tbHuespedes.getValueAt(RegistroSeleccionado, 3);
-	    	String Nacionalidad = (String) tbHuespedes.getValueAt(RegistroSeleccionado, 4);
-	    	String telefonoStr = (String) tbHuespedes.getValueAt(RegistroSeleccionado, 5);
-	    	Long Telefono = Long.parseLong(telefonoStr);
-	    	
-
-	      
-
-	        Huesped HuespedSeleccionado = huespedDao.buscarPorId(Id);
-	        System.out.println(HuespedSeleccionado);
-	        
-	        if (HuespedSeleccionado != null) {
-	            HuespedSeleccionado.setNombre(nombre);
-	            HuespedSeleccionado.setApellido(apellido);
-	            HuespedSeleccionado.setFechaDeNacimiento(FechaDeNacimiento);
-	            HuespedSeleccionado.setNacionalidad(Nacionalidad);
-	            HuespedSeleccionado.setTelefono(Telefono);
-	            
-	            huespedDao.actualizar(HuespedSeleccionado);
-	            cargarTabla();
+		 if (panel.getSelectedIndex() == 0) {
+	            tablaSeleccionada = tbReservas;
+	            busquedaController.cargarTabla(modelo, modeloHuesped);
+	        } else if (panel.getSelectedIndex() == 1) {
+	            tablaSeleccionada = tbHuespedes;
+	            busquedaController.cargarTabla(modelo, modeloHuesped);
 	        }
-	    } else {
-	        JOptionPane.showMessageDialog(null, "Selecciona una casilla");
-	        cargarTabla();
-	    }
+
+
 	}
-	
 
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	private void headerMousePressed(java.awt.event.MouseEvent evt) {

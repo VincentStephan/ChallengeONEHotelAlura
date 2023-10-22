@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 import java.awt.Color;
 
 import com.alura.hotel.Dao.huespedDAO;
+import com.alura.hotel.controller.HuespedRegistroController;
 import com.alura.hotel.modelo.Huesped;
 import com.alura.hotel.modelo.Reserva;
 import com.alura.hotel.utils.JPAUtils;
@@ -33,21 +34,19 @@ import javax.swing.JSeparator;
 @SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
 
-	private EntityManager em = JPAUtils.getEntetyManager();
 
-	private huespedDAO huespedDao = new huespedDAO(this.em);
 
 	private JPanel contentPane;
 	private JTextField txtNombre;
 	private JTextField txtApellido;
 	private JTextField txtTelefono;
-	private JTextField txtNreserva;
+	protected JTextField txtNreserva;
 	private JDateChooser txtFechaN;
 	private JComboBox<Format> txtNacionalidad;
 	private JLabel labelExit;
 	private JLabel labelAtras;
 	int xMouse, yMouse;
-
+    private HuespedRegistroController huespedRegistroController = new HuespedRegistroController();
 	private Reserva reservaDatos;
 
 	/**
@@ -234,30 +233,8 @@ public class RegistroHuesped extends JFrame {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
-				try {
-					String Nombre = txtNombre.getText();
-					String Apellido = txtApellido.getText();
-					Date UtilDate= txtFechaN.getDate();
-					java.sql.Date FechaDeNacimiento = new java.sql.Date(UtilDate.getTime());
-					String Nacionalidad = txtNacionalidad.getSelectedItem().toString();
-					Long Telefono = Long.parseLong(txtTelefono.getText());
-					Huesped huesped = new Huesped(Nombre, Apellido, FechaDeNacimiento, Nacionalidad, Telefono);
-
-					huesped.setReservas(reservaDatos);
-					huespedDao.guardar(huesped);
-					huespedDao.cerrar();
-					JOptionPane.showMessageDialog(null, "Se guardo correctamente la información");
-					MenuUsuario usuario = new MenuUsuario();
-					usuario.setVisible(true);
-					dispose();
-
-				} catch (Exception e2) {
-					e2.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error en guardar la información");
-					huespedDao.cerrar();
-				}
-
+				huespedRegistroController.guardarHuesped(txtNombre, txtApellido, txtFechaN, txtNacionalidad, txtTelefono, reservaDatos);
+				dispose();
 			}
 
 		});
@@ -310,46 +287,46 @@ public class RegistroHuesped extends JFrame {
 		header.setBackground(Color.WHITE);
 
 		header.setOpaque(false);
-				
-						labelAtras = new JLabel("<");
-						labelAtras.setBounds(0, 0, 53, 36);
-						header.add(labelAtras);
-						labelAtras.setBackground(new Color(12, 138, 199));
-						labelAtras.setHorizontalAlignment(SwingConstants.CENTER);
-						labelAtras.setForeground(Color.WHITE);
-						labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
-						
-								JPanel btnAtras = new JPanel();
-								btnAtras.setOpaque(false);
-								btnAtras.setBounds(0, 0, 53, 36);
-								header.add(btnAtras);
-								btnAtras.setDoubleBuffered(false);
-								btnAtras.setForeground(new Color(12, 138, 199));
-								
-										btnAtras.setBackground(new Color(12, 138, 199));
-										
-												btnAtras.addMouseListener(new MouseAdapter() {
-													@Override
-													public void mouseClicked(MouseEvent e) {
-														ReservasView reservas = new ReservasView();
-														reservas.setVisible(true);
-														dispose();
-													}
-										
-													@Override
-													public void mouseEntered(MouseEvent e) {
-														btnAtras.setBackground(Color.white);
-														labelAtras.setForeground(Color.black);
-													}
-										
-													@Override
-													public void mouseExited(MouseEvent e) {
-														btnAtras.setBackground(new Color(12, 138, 199));
-														labelAtras.setForeground(Color.white);
-													}
-												});
-												btnAtras.setLayout(null);
-												btnAtras.setBackground(Color.white);
+
+		labelAtras = new JLabel("<");
+		labelAtras.setBounds(0, 0, 53, 36);
+		header.add(labelAtras);
+		labelAtras.setBackground(new Color(12, 138, 199));
+		labelAtras.setHorizontalAlignment(SwingConstants.CENTER);
+		labelAtras.setForeground(Color.WHITE);
+		labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
+
+		JPanel btnAtras = new JPanel();
+		btnAtras.setOpaque(false);
+		btnAtras.setBounds(0, 0, 53, 36);
+		header.add(btnAtras);
+		btnAtras.setDoubleBuffered(false);
+		btnAtras.setForeground(new Color(12, 138, 199));
+
+		btnAtras.setBackground(new Color(12, 138, 199));
+
+		btnAtras.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ReservasView reservas = new ReservasView();
+				reservas.setVisible(true);
+				dispose();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnAtras.setBackground(Color.white);
+				labelAtras.setForeground(Color.black);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnAtras.setBackground(new Color(12, 138, 199));
+				labelAtras.setForeground(Color.white);
+			}
+		});
+		btnAtras.setLayout(null);
+		btnAtras.setBackground(Color.white);
 
 		JPanel btnexit = new JPanel();
 		btnexit.setBounds(857, 0, 53, 36);
@@ -409,4 +386,5 @@ public class RegistroHuesped extends JFrame {
 
 		}
 	}
+
 }

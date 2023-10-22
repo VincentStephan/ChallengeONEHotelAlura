@@ -15,15 +15,15 @@ import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import java.util.Date;
 
-import javax.persistence.EntityManager;
+
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
@@ -31,15 +31,16 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import com.alura.hotel.Dao.reservaDAO;
-import com.alura.hotel.modelo.Reserva;
-import com.alura.hotel.utils.JPAUtils;
+
+import com.alura.hotel.controller.ReservasViewController;
+
 import com.toedter.calendar.JDateChooser;
 
 @SuppressWarnings("serial")
 public class ReservasView extends JFrame {
 
-	private EntityManager em = JPAUtils.getEntetyManager();
+
+	private ReservasViewController reservasViewController = new ReservasViewController();
 
 	private JPanel contentPane;
 	public static JTextField txtValor;
@@ -50,7 +51,7 @@ public class ReservasView extends JFrame {
 	private JLabel labelExit;
 	private JLabel labelAtras;
 	private JPanel btnexit;
-	private reservaDAO reservaDao = new reservaDAO(this.em);
+	
 	private int valorReserva;
 
 	/**
@@ -114,43 +115,8 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
-
-					// Obtén los valores de los componentes de la interfaz de usuario
-					Date fechaEntradaUtilDate = txtFechaEntrada.getDate();
-					Date fechaSalidaUtilDate = txtFechaSalida.getDate();
-
-					java.sql.Date fechaEntrada = new java.sql.Date(fechaEntradaUtilDate.getTime());
-					java.sql.Date fechaSalida = new java.sql.Date(fechaSalidaUtilDate.getTime());
-
-					String valor = txtValor.getText();
-					String formaPago = txtFormaPago.getSelectedItem().toString();
-
-					RegistroHuesped registro = new RegistroHuesped();
-
-					try {
-
-						Reserva reservaDatos = new Reserva(fechaEntrada, fechaSalida, valor, formaPago);
-						reservaDao.guardar(reservaDatos);
-						registro.setReserva(reservaDatos);
-						registro.setNreserva();
-						registro.setVisible(true);
-						reservaDao.cerrar();
-						dispose();
-
-					} catch (Exception e1) {
-
-						e1.printStackTrace();
-						registro.setVisible(false);
-						JOptionPane.showMessageDialog(null, "Error en guardar la informacion");
-						ReservasView frame = new ReservasView();
-						frame.setVisible(true);
-						reservaDao.cerrar();
-					}
-
-				} else {
-					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
-				}
+				reservasViewController.guardarReservas(txtFechaEntrada, txtFechaSalida, txtValor, txtFormaPago);
+				dispose();
 			}
 		});
 
@@ -320,7 +286,7 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.setFont(new Font("Roboto", Font.PLAIN, 18));
 		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				valorReserva = calcularPrecioReserva();
+				valorReserva = reservasViewController.calcularPrecioReserva(txtFechaEntrada, txtFechaSalida);
 				txtValor.setText(valorReserva + "$");
 			}
 		});
@@ -407,27 +373,5 @@ public class ReservasView extends JFrame {
 
 	}
 
-	public int calcularPrecioReserva() {
-		int valorBaseReserva = 10;
-
-		Date fechaEntrada = (Date) txtFechaEntrada.getDate();
-		Date fechaSalida = (Date) txtFechaSalida.getDate();
-
-		if (fechaEntrada != null && fechaSalida != null) {
-			int diferenciaEnMillis = (int) (fechaSalida.getTime() - fechaEntrada.getTime());
-			int diferenciaEnDias = (diferenciaEnMillis / 86400000);
-
-			if (diferenciaEnDias > 0) {
-				return valorBaseReserva * diferenciaEnDias;
-
-			} else {
-				txtFechaSalida.setCalendar(null);
-				JOptionPane.showMessageDialog(null, "Seleccione una fecha correcta");
-
-			}
-		}
-		return 0;
-
-	}
-
+	
 }
