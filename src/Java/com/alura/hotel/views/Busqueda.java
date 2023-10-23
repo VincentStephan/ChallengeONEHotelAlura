@@ -387,10 +387,7 @@ public class Busqueda extends JFrame {
 		if (panel.getSelectedIndex() == 0) {
 			tablaSeleccionada = tbReservas;
 			busquedaController.cargarTabla(modelo, modeloHuesped);
-		} else if (panel.getSelectedIndex() == 1) {
-			tablaSeleccionada = tbHuespedes;
-			busquedaController.cargarTabla(modelo, modeloHuesped);
-		}
+		} 
 
 	}
 
