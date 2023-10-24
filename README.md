@@ -27,7 +27,7 @@ _El proyecto necesita de una base de datos por los que debemos configurarla de l
 
 ![Diagrama de la Base de Datos](https://user-images.githubusercontent.com/134095107/277779187-4662c783-0bad-4a05-a64b-c3eb12e06fa8.png)
 
-_Tener en cuenta que nuestra calve forenea en huespedes no este restringida (podemos usar la opcion en cascada para que puede eliminar datos relacionados en continuidad) ya que no permitira eliminar valores relacionados y nos mandara un error, como en este caso las reservas con huespedes_
+_Tener en cuenta que nuestra calve forenea en huespedes no este restringida (podemos usar la opcion en cascada para que puede eliminar datos relacionados en continuidad) ya que no permitira eliminar valores relacionados y nos mandara un error, como en este caso las reservas con huespedes. En este caso en MySqL_ 
 
 ![Clave foranea](https://user-images.githubusercontent.com/134095107/277779822-ffaa0821-28db-4963-b631-9e836d2d1293.png)
 
