@@ -9,7 +9,7 @@ El programa permite una solución integral para la administración de un hotel o
 
 _Posee una sistema de Login pero solo esta integrado los datos dentro del proytecto en vez de una consulta a una base de datos para mantener la practisidad ya que no es el foco central del proyecto_
 
-[Ejemplo](https://user-images.githubusercontent.com/134095107/277796832-2351a6da-0d87-48ad-b5c9-3a65b5dd198a.mp4))
+[Ejemplo](https://user-images.githubusercontent.com/134095107/277796832-2351a6da-0d87-48ad-b5c9-3a65b5dd198a.mp4)
 
 
 
