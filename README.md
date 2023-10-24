@@ -1,12 +1,13 @@
 # Challenge ONE Hotel Alura
 
 
-_Este proyecto surgido del challege proporciado por Alura Latam. El programa permite una solución integral para la administración de un hotel o establecimiento de alojamiento. Esta aplicación aborda diversos aspectos clave, como la gestión de reservas, la información de los huéspedes, las tarifas y opciones de pago, y más. Proporciona a los administradores y empleados del hotel una plataforma eficiente para llevar un seguimiento de las reservas, ofrecer un servicio de calidad a los huéspedes y mantener un control preciso sobre la operación del hotel.
+_Este proyecto surgido del challege proporciado por Alura Latam. Este proyecto tiene el proposito de afianciar nuestro conocimiento en el uso de una base de datos simulado en la vida real
 
 ## Caracteristicas 🚀
 
+:El programa permite una solución integral para la administración de un hotel o establecimiento de alojamiento. Esta aplicación aborda diversos aspectos clave, como la gestión de reservas, la información de los huéspedes, las tarifas y opciones de pago, y más. Proporciona a los administradores y empleados del hotel una plataforma eficiente para llevar un seguimiento de las reservas, ofrecer un servicio de calidad a los huéspedes y mantener un control preciso sobre la operación del hotel.
 
-_El programa permite a los usuarios convertir entre diferentes tipos de monedas, proporcionando una interfaz amigable donde pueden ingresar la cantidad de moneda a convertir_
+_Posee una sistema de Login pero solo esta integraado los datos dentro del proytecto en vez de una consulta a una base de datos para mantener la practisidad ya que no es el foco central del proyecto_
 
 
 
@@ -38,6 +39,12 @@ _Con la base de datos lista solo debemos tener que configurar el archivor  __per
 _Tener en cuenta la configuracion del build path para evitar errores en las dependencias_
 
 ![Buildpath](https://user-images.githubusercontent.com/134095107/277785778-8362c0d5-6a08-4489-9192-591e1e2e7cc2.png)
+
+_Login por defecto para acceder_
+
+![Login](https://user-images.githubusercontent.com/134095107/277787701-5bc36fe0-d857-4291-908e-5065364add69.png)
+Usuario = admin
+Contraseña = admin
 
 ## Requisitos ⚙️
 
