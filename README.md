@@ -20,9 +20,11 @@ _Posee una sistema de Login pero solo esta integrado los datos dentro del proyte
 * _Gestion de huespedes y reservas_
 * _Opciones de eliminacion, edicion de datos_
 * _Opciones de busqueda de datos siguiendo los siguientes criterios
-Existen dos critério de búsqueda:
-- Apellido
-- Número de Reserva_
+Existen dos critério de búsqueda:_
+
+__Apellido__
+
+__Número de Reserva__
 
 
 
