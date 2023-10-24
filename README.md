@@ -45,6 +45,7 @@ _Login por defecto para acceder_
 ![Login](https://user-images.githubusercontent.com/134095107/277787701-5bc36fe0-d857-4291-908e-5065364add69.png)
 
 __Usuario = admin__
+
 __Contraseña = admin__
 
 ## Requisitos ⚙️
