@@ -28,7 +28,7 @@ _El proyecto necesita de una base de datos por los que debemos configurarla de l
 ![Diagrama de la Base de Datos](https://user-images.githubusercontent.com/134095107/277779187-4662c783-0bad-4a05-a64b-c3eb12e06fa8.png)
 _Teneer en cuenta que nuestra calve forenea en huespedes no este restringida ya que no permitira eliminar valores relacionados y nos mandara un error, como en este caso las reservas con huespedes_
 
-https://user-images.githubusercontent.com/134095107/277779822-ffaa0821-28db-4963-b631-9e836d2d1293.png
+![Clave foranea](https://user-images.githubusercontent.com/134095107/277779822-ffaa0821-28db-4963-b631-9e836d2d1293.png)
 
 _Con la bese de datos lista solo debemos tener que configurar el archivor persistence.xml para colocar la conxion a la base de datos_
 
