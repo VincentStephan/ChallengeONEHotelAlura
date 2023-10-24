@@ -35,6 +35,10 @@ _Con la base de datos lista solo debemos tener que configurar el archivor  __per
 
 ![Persistence](https://user-images.githubusercontent.com/134095107/277784218-34569699-2ab5-46ee-9b08-3f6f0743ef80.png)
 
+_Tener en cuenta la configuracion del build path para evitar errores en las dependencias_
+
+![Buildpath](https://user-images.githubusercontent.com/134095107/277785778-8362c0d5-6a08-4489-9192-591e1e2e7cc2.png)
+
 ## Requisitos ⚙️
 
 * _Java Runtime Environment 17_
