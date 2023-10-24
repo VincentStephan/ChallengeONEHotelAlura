@@ -1,13 +1,13 @@
 # Challenge ONE Hotel Alura
 
 
-_Este proyecto surgido del challege proporciado por Alura Latam. Este proyecto tiene el proposito de afianciar nuestro conocimiento en el uso de una base de datos simulado en la vida real
+_Este proyecto surgido del challege proporciado por Alura Latam. Este proyecto tiene el proposito de afianciar nuestro conocimiento en el uso de una base de datos simulado en la vida real_
 
 ## Caracteristicas 🚀
 
-:El programa permite una solución integral para la administración de un hotel o establecimiento de alojamiento. Esta aplicación aborda diversos aspectos clave, como la gestión de reservas, la información de los huéspedes, las tarifas y opciones de pago, y más. Proporciona a los administradores y empleados del hotel una plataforma eficiente para llevar un seguimiento de las reservas, ofrecer un servicio de calidad a los huéspedes y mantener un control preciso sobre la operación del hotel.
+El programa permite una solución integral para la administración de un hotel o establecimiento de alojamiento. Esta aplicación aborda diversos aspectos clave, como la gestión de reservas, la información de los huéspedes, las tarifas y opciones de pago, y más. Proporciona a los administradores y empleados del hotel una plataforma eficiente para llevar un seguimiento de las reservas, ofrecer un servicio de calidad a los huéspedes y mantener un control preciso sobre la operación del hotel.
 
-_Posee una sistema de Login pero solo esta integraado los datos dentro del proytecto en vez de una consulta a una base de datos para mantener la practisidad ya que no es el foco central del proyecto_
+_Posee una sistema de Login pero solo esta integrado los datos dentro del proytecto en vez de una consulta a una base de datos para mantener la practisidad ya que no es el foco central del proyecto_
 
 
 
