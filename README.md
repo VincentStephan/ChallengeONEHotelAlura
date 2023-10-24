@@ -31,7 +31,7 @@ _Tener en cuenta que nuestra calve forenea en huespedes no este restringida (pod
 
 ![Clave foranea](https://user-images.githubusercontent.com/134095107/277779822-ffaa0821-28db-4963-b631-9e836d2d1293.png)
 
-_Con la bese de datos lista solo debemos tener que configurar el archivor persistence.xml para colocar la conxion a la base de datos_
+_Con la base de datos lista solo debemos tener que configurar el archivor ### persistence.xml ###  para colocar la conxion a la base de datos_
 
 
 ## Requisitos ⚙️
