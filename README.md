@@ -40,6 +40,9 @@ _Con la base de datos lista solo debemos tener que configurar el archivor  __per
 * _Java Runtime Environment 17_
 * _Java SE Development Kit (JDK) 17_
 * _Entorno de desarrollo Java (como Eclipse o NetBeans) o simplemente puedes compilar y ejecutar el código usando la línea de comandos_
+* _MySQL_
+*
+  
 
 ## Construido con 🛠️
 
@@ -47,6 +50,8 @@ _Con la base de datos lista solo debemos tener que configurar el archivor  __per
 * _Lenguaje de Programación: Java_
 * _Interfaz de Usuario: Librería Swing_
 * _IDE NetBeans_
+*  _JPA: Hibernate_
+*  _Lombok_
 
 
 ## Autores ✒️
