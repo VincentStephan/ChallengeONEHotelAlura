@@ -33,6 +33,7 @@ _Tener en cuenta que nuestra calve forenea en huespedes no este restringida (pod
 
 _Con la base de datos lista solo debemos tener que configurar el archivor  __persistence.xml__  para colocar la conxion a la base de datos_
 
+![Persistence](https://user-images.githubusercontent.com/134095107/277784218-34569699-2ab5-46ee-9b08-3f6f0743ef80.png)
 
 ## Requisitos ⚙️
 
