@@ -25,7 +25,7 @@ _El programa permite a los usuarios convertir entre diferentes tipos de monedas,
 
 _El proyecto necesita de una base de datos por los que debemos configurarla de la siguiente manera_
 
-https://github.com/VincentStephan/ChallengeONEHotelAlura/issues/2#issue-1959917192
+![Texto Alternativo]([URL de la Imagen](https://github.com/VincentStephan/ChallengeONEHotelAlura/issues/2#issue-1959917192)) 
 
 _Teneer en cuenta que nuestra calve forenea en huespedes no este restringida ya que no permitira eliminar valores relacionados y nos mandara un error, como en este caso las reservas con huespedes_
 
