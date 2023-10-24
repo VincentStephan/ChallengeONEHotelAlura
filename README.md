@@ -35,11 +35,11 @@ _El proyecto necesita de una base de datos por los que debemos configurarla de l
 
 ![Diagrama de la Base de Datos](https://user-images.githubusercontent.com/134095107/277779187-4662c783-0bad-4a05-a64b-c3eb12e06fa8.png)
 
-_Tener en cuenta que nuestra calve forenea en huespedes no este restringida (podemos usar la opcion en cascada para que puede eliminar datos relacionados en continuidad) ya que no permitira eliminar valores relacionados y nos mandara un error, como en este caso las reservas con huespedes. En este caso en MySqL_ 
+_Tener en cuenta que nuestra clave foranea en huespedes no este restringida (podemos usar la opcion en cascada para que puede eliminar datos relacionados en continuidad) ya que no permitira eliminar valores relacionados y nos mandara un error, como en este caso las reservas con huespedes. En este caso en MySqL_ 
 
 ![Clave foranea](https://user-images.githubusercontent.com/134095107/277779822-ffaa0821-28db-4963-b631-9e836d2d1293.png)
 
-_Con la base de datos lista solo debemos tener que configurar el archivor  __persistence.xml__  para colocar la conxion a la base de datos_
+_Con la base de datos lista solo debemos tener que configurar el archivo  __persistence.xml__  para colocar la conxion a la base de datos_
 
 ![Persistence](https://user-images.githubusercontent.com/134095107/277784218-34569699-2ab5-46ee-9b08-3f6f0743ef80.png)
 
