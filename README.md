@@ -22,9 +22,9 @@ _Posee una sistema de Login pero solo esta integrado los datos dentro del proyte
 * _Opciones de busqueda de datos siguiendo los siguientes criterios
 Existen dos critério de búsqueda:_
 
-__Apellido__
+    __Apellido__
 
-__Número de Reserva__
+    __Número de Reserva__
 
 
 
